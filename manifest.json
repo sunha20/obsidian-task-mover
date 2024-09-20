@@ -3,7 +3,7 @@
   "name": "Task Mover",
   "version": "1.0.0",
   "minAppVersion": "0.0.0",
-  "description": "\“Obsidian task mover\” is a plugin that rollovers an uncompeleted (or other) task into the current file.",
+  "description": "Obsidian task mover is a plugin that rollovers an uncompeleted (or other) task into the current file.",
   "author": "seonha20",
   "authorUrl": "https://github.com/sunha20/",
   "isDesktopOnly": false
