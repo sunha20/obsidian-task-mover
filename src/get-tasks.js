@@ -1,4 +1,4 @@
-class TodoParser {
+class TaskParser {
   // Support all unordered list bullet symbols as per spec (https://daringfireball.net/projects/markdown/syntax#list)
   bulletSymbols = ["-", "*", "+"];
 
@@ -13,9 +13,9 @@ class TodoParser {
     this.#withChildren = withChildren;
   }
 
-  // Returns true if string s is a todo-item
-  #isTodo(s) {
-    const r = new RegExp(`\\s*[${this.bulletSymbols.join("")}] \\[[^xX-]\\].*`, "g"); // /\s*[-*+] \[[^xX-]\].*/g;
+  // Returns true if string s is a task-item
+  #isTask(s, status) {
+    const r = new RegExp(`\\s*[${this.bulletSymbols.join("")}] \\[${status}\\].*`, "g"); //default: /\s*[-*+] \[[^xX-]\].*/g;
     return r.test(s);
   }
 
@@ -56,26 +56,26 @@ class TodoParser {
     return this.#lines[l].search(/\S/);
   }
 
-  // Returns a list of strings that represents all the todos along with there potential children
-  getTodos() {
-    let todos = [];
+  // Returns a list of strings that represents all the tasks along with there potential children
+  getTasks(status = "[^xX-]") {
+    let tasks = [];
     for (let l = 0; l < this.#lines.length; l++) {
       const line = this.#lines[l];
-      if (this.#isTodo(line)) {
-        todos.push(line);
+      if (this.#isTask(line, status)) {
+        tasks.push(line);
         if (this.#withChildren && this.#hasChildren(l)) {
           const cs = this.#getChildren(l);
-          todos = [...todos, ...cs];
+          tasks = [...tasks, ...cs];
           l += cs.length;
         }
       }
     }
-    return todos;
+    return tasks;
   }
 }
 
-// Utility-function that acts as a thin wrapper around `TodoParser`
-export const getTodos = ({ lines, withChildren = false }) => {
-  const todoParser = new TodoParser(lines, withChildren);
-  return todoParser.getTodos();
-};
+// Utility-function that acts as a thin wrapper around `TaskParser`
+export const getTasks = ({ lines, withChildren = false, status = "[^xX-]" }) => {
+  const taskParser = new TaskParser(lines, withChildren);
+  return taskParser.getTasks(status);
+}

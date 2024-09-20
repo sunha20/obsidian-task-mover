@@ -32,10 +32,15 @@ export default class UndoModal extends Modal {
 
   async confirmUndo(undoHistoryInstance) {
     await this.plugin.app.vault.modify(undoHistoryInstance.today.file, undoHistoryInstance.today.oldContent);
-    if (undoHistoryInstance.previousDay.file != undefined) {
-      await this.plugin.app.vault.modify(undoHistoryInstance.previousDay.file, undoHistoryInstance.previousDay.oldContent);
+
+    // previousDay가 배열이므로 각 요소를 순회하여 처리
+    for (const day of undoHistoryInstance.previousDay) {
+      if (day.file != undefined) {
+        await this.plugin.app.vault.modify(day.file, day.oldContent);
+      }
     }
-    this.plugin.undoHistory = []
+
+    this.plugin.undoHistory = [];
   }
 
   async onOpen() {
@@ -45,14 +50,19 @@ export default class UndoModal extends Modal {
     contentEl.createEl('div', { text: 'Note that rollover actions can only be undone for up to 2 minutes after the command occurred, and will be removed from history if the app closes.' })
     contentEl.createEl('h4', { text: 'Changes made with undo:' })
 
-    const undoHistoryInstance = plugin.undoHistory[0]
-    let modTextArray = [await this.parseDay(undoHistoryInstance.today)]
-    if (undoHistoryInstance.previousDay.file != undefined) {
-      modTextArray.push(await this.parseDay(undoHistoryInstance.previousDay))
+    const undoHistoryInstance = plugin.undoHistory[0];
+    let modTextArray = [await this.parseDay(undoHistoryInstance.today)];
+
+    // previousDay가 배열이므로 각 요소를 순회하여 처리
+    if (undoHistoryInstance.previousDay.length > 0) {
+      for (const day of undoHistoryInstance.previousDay) {
+        modTextArray.push(await this.parseDay(day));
+      }
     }
+
     modTextArray.forEach(txt => {
-      contentEl.createEl('div', { text: txt })
-    })
+      contentEl.createEl('div', { text: txt });
+    });
 
     new Setting(contentEl)
       .addButton(button => button
