@@ -1,8 +1,6 @@
-import {Notice, Plugin, W} from "obsidian";
+import {Notice, Plugin} from "obsidian";
 import {
     getDailyNoteSettings,
-    getAllDailyNotes,
-    getDailyNote,
 } from "obsidian-daily-notes-interface";
 import UndoModal from "./ui/UndoModal";
 import TaskMoverSettingTab from "./ui/TaskMoverSettingTab";
@@ -330,10 +328,11 @@ export default class TaskMover extends Plugin {
             lastNotes = [this.getLastDailyNote()];
         } else if (source === "week") {
             lastNotes = this.getLastWeekNote();
-            if (!lastNotes || !lastNotes.length === 0) {
-                new Notice("no week list", 30000);
-                return;
-            }
+        }
+
+        if (!lastNotes || lastNotes.length === 0 || !lastNotes[0]) {
+            new Notice("no daily note file", 30000);
+            return;
         }
 
         // setup undo history
