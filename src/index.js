@@ -405,13 +405,13 @@ export default class TaskMover extends Plugin {
 
         this.addSettingTab(new TaskMoverSettingTab(this.app, this));
 
-        this.registerEvent(
-            this.app.vault.on("create", async (file) => {
-                // Check if automatic daily note creation is enabled
-                if (!this.settings.rolloverOnFileCreate) return;
-                this.rollover(file);
-            })
-        );
+        // this.registerEvent(
+        //     this.app.vault.on("create", async (file) => {
+        //         // Check if automatic daily note creation is enabled
+        //         if (!this.settings.rolloverOnFileCreate) return;
+        //         this.rollover(file);
+        //     })
+        // );
 
         this.addCommand({
             id: "obsidian-rollover-last-day-tasks",
