@@ -242,7 +242,7 @@ export default class TaskMover extends Plugin {
 
         previousDayHistory.push({
             file: note,
-            oldContent: `${tasks}`,
+            oldContent: `${lastNoteContent}`,
         });
         let lines = lastNoteContent.split("\n");
 
@@ -299,7 +299,7 @@ export default class TaskMover extends Plugin {
         let filteredTasks = [];
         tasks.forEach((line) => {
             const trimmedLine = (line || "").trim();
-            if (trimmedLine != "- [ ]" && trimmedLine != "- [  ]")
+            if (trimmedLine !== "- [ ]" && trimmedLine !== "- [  ]")
                 filteredTasks.push(line);
             else
                 numOfEmpty++;
@@ -341,10 +341,7 @@ export default class TaskMover extends Plugin {
 
         // setup undo history
         let undoHistoryInstance = {
-            previousDay: [{
-                file: undefined,
-                oldContent: "",
-            },],
+            previousDay: [],
             today: {
                 file: undefined,
                 oldContent: "",
