@@ -95,7 +95,7 @@ export default class TaskMoverSettingTab extends PluginSettingTab {
         new Setting(this.containerEl)
             .setName("Rollover children of tasks")
             .setDesc(
-                `By default, only the actual tasks are rolled over. If you add nested Markdown-elements beneath your tasks, these are not rolled over but stay in place, possibly altering the logic of your previous note. This setting allows for also migrating the nested elements.`
+                `By default, only the tasks with custom status are rolled over. If you want to add all nested subtasks to a task with a custom status, Change the value to true.`
             )
             .addToggle((toggle) =>
                 toggle

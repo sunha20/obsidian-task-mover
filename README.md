@@ -15,7 +15,7 @@ The first thing to mention is that it's heavily inspired from the [obsidian-roll
 - Grouping Tasks: Grouping tasks based on which note they were rolled over from. You can also specify a group heading level.
 - Delete tasks from previous day: When the task is rolled over, the original note task is deleted.
 - Remove empty tasks: Empty tasks are not rolled over.
-- Roll over children of tasks: Nested subtasks are rolled over.
+- Rollover children of tasks: All nested subtasks are rolled over.
 
 ## Requirements
 You must have either:
