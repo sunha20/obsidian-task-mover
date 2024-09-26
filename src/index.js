@@ -192,29 +192,34 @@ export default class TaskMover extends Plugin {
     //     return true;
     // }
 
-    summorizeRollover(tasksAdded, numEmpiesToNotAdd, deleteOnComplete, templateHeadingNotFoundMessage, undoHistoryInstance) {
+    summorizeRollover(tasksAdded, emptiesToNotAdd, templateHeadingNotFoundMessage, undoHistoryInstance) {
         const tasksAddedString =
-            tasksAdded == 0
+            tasksAdded === 0
                 ? ""
                 : `- ${tasksAdded} task${tasksAdded > 1 ? "s" : ""} rolled over.`;
-        const emptiesToNotAddToTomorrowString =
-            emptiesToNotAddToTomorrow == 0
+
+        const emptiesToNotAddString =
+            emptiesToNotAdd === 0
                 ? ""
-                : deleteOnComplete
-                    ? `- ${emptiesToNotAddToTomorrow} empty task${
-                        emptiesToNotAddToTomorrow > 1 ? "s" : ""
+                : this.settings.deleteOnComplete
+                    ? `- ${emptiesToNotAdd} empty task${
+                        emptiesToNotAdd > 1 ? "s" : ""
                     } removed.`
                     : "";
+
         const part1 =
             templateHeadingNotFoundMessage.length > 0
                 ? `${templateHeadingNotFoundMessage}`
                 : "";
+
         const part2 = `${tasksAddedString}${
             tasksAddedString.length > 0 ? " " : ""
         }`;
-        const part3 = `${emptiesToNotAddToTomorrowString}${
-            emptiesToNotAddToTomorrowString.length > 0 ? " " : ""
+
+        const part3 = `${emptiesToNotAddString}${
+            emptiesToNotAddString.length > 0 ? " " : ""
         }`;
+
 
         let allParts = [part1, part2, part3];
         let nonBlankLines = [];
@@ -284,7 +289,6 @@ export default class TaskMover extends Plugin {
             ) {
                 dailyNoteContent += tasks_todayString;
             }
-
             await this.app.vault.modify(file, dailyNoteContent);
         }
         return templateHeadingNotFoundMessage;
@@ -331,7 +335,7 @@ export default class TaskMover extends Plugin {
         }
 
         if (!lastNotes || lastNotes.length === 0 || !lastNotes[0]) {
-            new Notice("no daily note file", 30000);
+            // new Notice("no daily note file", 30000);
             return;
         }
 
@@ -349,7 +353,7 @@ export default class TaskMover extends Plugin {
 
         // get tasks from noteList, if exist
         let taskList = []
-        let numEmptesToNotAdd = 0;
+        let numEmptiesToNotAdd = 0;
         for (let note of lastNotes) {
             let tasks = await this.getAllTasks(note, customStatus);
 
@@ -364,7 +368,7 @@ export default class TaskMover extends Plugin {
             // filter empty tasks
             if (removeEmptyTasks) {
                 const {numOfEmpty, filteredTasks} = this.filterTask(tasks);
-                numEmptesToNotAdd += numOfEmpty;
+                numEmptiesToNotAdd += numOfEmpty;
 
                 if (!filteredTasks || filteredTasks.length === 0)
                     continue;
@@ -372,12 +376,10 @@ export default class TaskMover extends Plugin {
                     tasks = filteredTasks;
             }
 
-
             // if deleteOnComplete, get yesterday's content and modify it
             if (deleteOnComplete) {
                 await this.editLast(note, undoHistoryInstance.previousDay, tasks);
             }
-
 
             // group by path
             if (groupByPath) {
@@ -392,7 +394,7 @@ export default class TaskMover extends Plugin {
         const templateHeadingNotFoundMessage = await this.editToday(templateHeading, taskList, file, undoHistoryInstance);
 
         // summary
-        this.summorizeRollover(numTask, numEmpiesToNotAdd, deleteOnComplete, templateHeadingNotFoundMessage, undoHistoryInstance);
+        this.summorizeRollover(numTask, numEmptiesToNotAdd, templateHeadingNotFoundMessage, undoHistoryInstance);
 
     }
 
@@ -449,5 +451,8 @@ export default class TaskMover extends Plugin {
             }
         });
 
+    }
+
+    onunload() {
     }
 }
