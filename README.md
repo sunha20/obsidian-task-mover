@@ -8,6 +8,7 @@ The first thing to mention is that it's heavily inspired from the [obsidian-roll
 ### 1. Commands
 - Rollover Last Day Tasks: Rollover tasks from the most recent daily notes.
 - Rollover Last Week Tasks: Rollover tasks from daily notes between Sunday and Saturday of the previous week as of the current date.
+- Undo last rollover: Undo last rollover which can be run within 2 minutes of a rollover occurring. Currently only 1 undo is available for use at the moment.
 
 ### 2. Options
 - Rollover Heading: Which heading should the tasks go under. If the current note doesn't have a corresponding title, tasks are added to the bottom of the note.
